@@ -43,9 +43,9 @@ class RegistrationController: UIViewController, UITextFieldDelegate {
         return view
     }()
     
-    private lazy var passwordContainerView: UIView = {
-        let image = #imageLiteral(resourceName: "ic_lock_outline_white_2x-1")
-        let view = Utilities().inputContainerView(withImage: image, textField: passwordTextField)
+    private lazy var nameContainerView: UIView = {
+        let image = #imageLiteral(resourceName: "ic_person_outline_white_2x-1")
+        let view = Utilities().inputContainerView(withImage: image, textField: nameTextField)
         return view
     }()
     
@@ -55,9 +55,9 @@ class RegistrationController: UIViewController, UITextFieldDelegate {
         return tf
     }()
     
-    private let passwordTextField: UITextField = {
-        let tf = Utilities().textField(withPlaceHolder: "Password")
-        tf.isSecureTextEntry = true
+    private let nameTextField: UITextField = {
+        let tf = Utilities().textField(withPlaceHolder: "Name")
+
         return tf
     }()
     
@@ -119,9 +119,9 @@ class RegistrationController: UIViewController, UITextFieldDelegate {
     
     @objc func handlePassword() {
         guard let email = emailTextField.text else {return}
-        guard let password = passwordTextField.text else {return}
+        guard let name = nameTextField.text else {return}
         
-        Auth.auth().createUser(withEmail: email, password: password) { (result, error) in
+        Auth.auth().createUser(withEmail: email, password: name) { (result, error) in
             if let error = error {
                 print("\(error.localizedDescription)")
                 return
@@ -140,7 +140,7 @@ class RegistrationController: UIViewController, UITextFieldDelegate {
         
         
         
-        let controller = UsernameController()
+        let controller = PasswordController()
         navigationController?.pushViewController(controller, animated: true)
         
     }
@@ -172,7 +172,7 @@ class RegistrationController: UIViewController, UITextFieldDelegate {
     
     func configureNotificationObservor() {
         emailTextField.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
-        passwordTextField.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
+        nameTextField.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
         
     }
     
@@ -188,7 +188,7 @@ class RegistrationController: UIViewController, UITextFieldDelegate {
         iconImage.clipsToBounds = true
         iconImage.contentMode = .scaleAspectFit
         
-        let secondStack = UIStackView(arrangedSubviews: [createAccountLabel,emailContainerView, passwordContainerView, accountTypeContainerView])
+        let secondStack = UIStackView(arrangedSubviews: [createAccountLabel,emailContainerView, nameContainerView, accountTypeContainerView])
         secondStack.axis = .vertical
         secondStack.spacing = 20
         secondStack.distribution = .fillEqually

@@ -1,5 +1,5 @@
 //
-//  UsernameController.swift
+//  PasswordController.swift
 //  CaptaaMaster
 //
 //  Created by Falilatu Aroworade on 4/29/20.
@@ -9,22 +9,22 @@
 import UIKit
 import Firebase
 
-class UsernameController: UIViewController {
+class PasswordController: UIViewController {
     
     // MARK: - Properties
     
     private let iconImage = UIImageView(image: #imageLiteral(resourceName: "captaalogo"))
     private let dividerView = SeperatorView()
     
-    private let usernameLabel: UILabel = {
+    private let passwordLabel: UILabel = {
         let label = UILabel()
-        label.text = "You'll need a username"
+        label.text = "You'll need a password"
         label.textColor = .white
         label.font = UIFont.boldSystemFont(ofSize: 26)
         return label
     }()
     
-    private let usernameInstructionLabel: UILabel = {
+    private let passwordInstructionLabel: UILabel = {
         let label = UILabel()
         label.text = "Make sure it's 6 characters or more."
         label.textColor = .white
@@ -32,14 +32,15 @@ class UsernameController: UIViewController {
         return label
     }()
     
-    private lazy var usernameContainerView: UIView = {
-        let image = #imageLiteral(resourceName: "ic_person_outline_white_2x")
-        let view = Utilities().inputContainerView(withImage: image, textField: usernameTextField)
+    private lazy var passwordContainerView: UIView = {
+        let image = #imageLiteral(resourceName: "ic_lock_outline_white_2x")
+        let view = Utilities().inputContainerView(withImage: image, textField: passwordTextField)
         return view
     }()
     
-    private let usernameTextField: UITextField = {
-        let tf = Utilities().textField(withPlaceHolder: "Username")
+    private let passwordTextField: UITextField = {
+        let tf = Utilities().textField(withPlaceHolder: "Password")
+        tf.isSecureTextEntry = true
         return tf
     }()
     
@@ -85,7 +86,7 @@ class UsernameController: UIViewController {
     
     @objc func showProfilePictureController() {
     
-    guard let username = usernameTextField.text else {return}
+    guard let username = passwordTextField.text else {return}
 
         Service.registerUserWithFirebase(withEmail: "", password: "", fullname: username) { (error, ref) in
             if let error = error {
@@ -122,14 +123,14 @@ class UsernameController: UIViewController {
         iconImage.contentMode = .scaleAspectFit
         
         
-        view.addSubview(usernameLabel)
-        usernameLabel.anchor(top: iconImage.bottomAnchor, left: view.leftAnchor, paddingTop: 35, paddingLeft: 8)
+        view.addSubview(passwordLabel)
+        passwordLabel.anchor(top: iconImage.bottomAnchor, left: view.leftAnchor, paddingTop: 35, paddingLeft: 8)
         
-        view.addSubview(usernameInstructionLabel)
-        usernameInstructionLabel.anchor(top: usernameLabel.bottomAnchor, left: view.leftAnchor, paddingTop: 15, paddingLeft: 8)
+        view.addSubview(passwordInstructionLabel)
+        passwordInstructionLabel.anchor(top: passwordLabel.bottomAnchor, left: view.leftAnchor, paddingTop: 15, paddingLeft: 8)
         
-        view.addSubview(usernameContainerView)
-        usernameContainerView.anchor(top: usernameInstructionLabel.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 25, paddingLeft: 8)
+        view.addSubview(passwordContainerView)
+        passwordContainerView.anchor(top: passwordInstructionLabel.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 25, paddingLeft: 8)
        
         view.addSubview(dividerView)
         dividerView.anchor(top: nil, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 100, paddingRight: 0 )
