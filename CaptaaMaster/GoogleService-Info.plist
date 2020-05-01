@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>1050341480880-fdfcdksgslpammlcovbdlmjhmq21iopk.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.1050341480880-fdfcdksgslpammlcovbdlmjhmq21iopk</string>
+	<key>API_KEY</key>
+	<string>AIzaSyD2iiujrc_BdCchU-z3ZM_-ntkTh99kPVU</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1050341480880</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>Captagram1.CaptaaMaster</string>
+	<key>PROJECT_ID</key>
+	<string>captaamaster</string>
+	<key>STORAGE_BUCKET</key>
+	<string>captaamaster.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1050341480880:ios:1713acd7a12d93aee0de75</string>
+	<key>DATABASE_URL</key>
+	<string>https://captaamaster.firebaseio.com</string>
+</dict>
+</plist>
