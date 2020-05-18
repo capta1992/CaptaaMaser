@@ -90,17 +90,25 @@ class PasswordController: UIViewController {
         
         guard let password = passwordTextField.text else {return}
         
+        showLoader(true)
+        
         Auth.auth().createUser(withEmail: user.email!, password: password) { (result, error) in
+             
             if let error = error {
-                print("\(error.localizedDescription)")
+                self.showMessage(withTitle: "Error", message: error.localizedDescription)
+                self.showLoader(false)
                 return
             }
+            
+            self.showLoader(false)
+           
             guard let uid = result?.user.uid else { return}
             
             let dic = [
                 "email": self.user.email,
                 "fullname": self.user.fullname
                 ] as [String: AnyObject]
+            
             
             self.user = User(uid: uid, dictionary: dic)
             

@@ -17,6 +17,8 @@ pod 'Mixpanel'
 pod 'SDWebImage', '~> 5.0'
 pod 'JGProgressHUD','~>2.0.3'
 pod 'GoogleSignIn'
+pod 'Instructions'
+
 
   target 'CaptaaMasterTests' do
     inherit! :search_paths

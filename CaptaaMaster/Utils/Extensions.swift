@@ -9,6 +9,9 @@
 
 import UIKit
 import JGProgressHUD
+import Firebase
+import Photos
+
 
 struct Fonts {
     static let captionFont = "AmaticSC"
@@ -22,6 +25,8 @@ extension UIColor {
     static let wedjColor = UIColor.rgb(red: 61, green: 89, blue: 115)
     static let darkBlueMode = UIColor.rgb(red: 36, green: 52, blue: 71)
     static let mainBlueTint = UIColor.rgb(red: 17, green: 154, blue: 237)
+    static let instagramColor = UIColor.rgb(red: 253, green: 29, blue: 29)
+    
     
 }
 
@@ -85,6 +90,12 @@ extension UIView {
         }
     }
     
+    func center(inView view: UIView, yConstant: CGFloat? = 0) {
+        translatesAutoresizingMaskIntoConstraints = false
+        centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: yConstant!).isActive = true
+    }
+    
     func setDimensions(height: CGFloat, width: CGFloat) {
         translatesAutoresizingMaskIntoConstraints = false
         heightAnchor.constraint(equalToConstant: height).isActive = true
@@ -100,6 +111,40 @@ extension UIView {
         translatesAutoresizingMaskIntoConstraints = false
         widthAnchor.constraint(equalToConstant: width).isActive = true
     }
+    
+    
+    func pulse(withIntensity intensity: CGFloat, withDuration duration: Double, loop: Bool) {
+        UIView.animate(withDuration: duration, delay: 0, options: [.repeat, .autoreverse], animations: {
+            loop ? nil : UIView.setAnimationRepeatCount(1)
+            self.transform = CGAffineTransform(scaleX: intensity, y: intensity)
+        }) { (true) in
+            self.transform = CGAffineTransform.identity
+        }
+    }
+    
+    enum ViewSide {
+        case Left, Right, Top, Bottom
+    }
+    
+    func addBorder(toSide side: ViewSide, withColor color: CGColor, andThickness thickness: CGFloat) {
+        let border = CALayer()
+        border.backgroundColor = color
+        switch side {
+        case .Left: border.frame = CGRect(x: frame.minX, y: frame.minY, width: thickness, height: frame.height); break
+        case .Right: border.frame = CGRect(x: frame.maxX, y: frame.minY, width: thickness, height: frame.height); break
+        case .Top: border.frame = CGRect(x: frame.minX, y: frame.minY, width: frame.width, height: thickness); break
+        case .Bottom: border.frame = CGRect(x: frame.minX, y: frame.maxY, width: frame.width, height: thickness); break
+        }
+        layer.addSublayer(border)
+    }
+    
+    
+    func addConstraintsToFillView(_ view: UIView) {
+        translatesAutoresizingMaskIntoConstraints = false
+        anchor(top: view.topAnchor, left: view.leftAnchor,
+               bottom: view.bottomAnchor, right: view.rightAnchor)
+    }
+    
     
     func fillSuperview() {
         translatesAutoresizingMaskIntoConstraints = false
@@ -249,3 +294,73 @@ extension UIButton {
     }
     
 }
+
+extension Database {
+    static func fetchUser(with uid: String, completion: @escaping(User)-> ()) {
+        REF_USERS.child(uid).observeSingleEvent(of: .value) { (snapshot) in
+            guard let dictionary = snapshot.value as? Dictionary<String, AnyObject> else {return}
+            let user = User(uid: uid, dictionary: dictionary)
+            completion(user)
+        }
+        
+}
+
+}
+
+
+extension UIViewController: FeedShareDelegate {
+    
+    func postImageToInstagram(image: UIImage) {
+        UIImageWriteToSavedPhotosAlbum(image, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
+    }
+    
+    @objc func image(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
+            if error != nil {
+                print(error)
+            }
+
+            let fetchOptions = PHFetchOptions()
+            fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+
+            let fetchResult = PHAsset.fetchAssets(with: .image, options: fetchOptions)
+
+       
+//            guard let urlScheme = URL(string: "instagram"),
+//                let imageData = image.pngData() else {
+//                return
+//            }
+//
+//            if UIApplication.shared.canOpenURL(urlScheme) {
+//                let pasterboardItems = [["com.instagram.sharedSticker.stickImage": imageData]]
+//                let pasterboardOptions = [UIPasteboard.OptionsKey.expirationDate: Date().addingTimeInterval(60*5)]
+//
+//                UIPasteboard.general.setItems(pasterboardItems, options: pasterboardOptions)
+//
+//                UIApplication.shared.open(urlScheme, options: [:], completionHandler: nil)
+//            }
+        
+            if let lastAsset = fetchResult.firstObject {
+                let localIdentifier = lastAsset.localIdentifier
+                let u = "instagram://library?AssetPath=" + localIdentifier
+                let url = URL(string: u)!
+                if UIApplication.shared.canOpenURL(url) {
+                    guard let imageData = image.pngData() else {
+                        return
+                    }
+                     let pasterboardItems = [["com.instagram.sharedSticker.stickerImage": imageData]]
+                                    let pasterboardOptions = [UIPasteboard.OptionsKey.expirationDate: Date().addingTimeInterval(60*5)]
+                    UIPasteboard.general.setItems(pasterboardItems, options: pasterboardOptions)
+                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                } else {
+                    let alertController = UIAlertController(title: "Error", message: "Instagram is not installed", preferredStyle: .alert)
+                    alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                    self.present(alertController, animated: true, completion: nil)
+                }
+            }
+    }
+}
+
+
+
+
+

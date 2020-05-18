@@ -27,44 +27,44 @@ struct Service {
             guard let uid = result?.user.uid else {return}
             let values = ["email": email, "fullname": fullname, "hasSeenOnboarding": false] as [String : Any]
             
-            REF_USERS.child(uid).updateChildValues(values, withCompletionBlock: completion)
+            REF_CATEGORY_USERS.child(uid).updateChildValues(values, withCompletionBlock: completion)
             
         }
     }
     
     
     
-    static func signInWithGoogle(didSignInFor user: GIDGoogleUser, completion: @escaping (DatabaseCompletion)) {
-        guard let authentication = user.authentication else {return}
-        let credential = GoogleAuthProvider.credential(withIDToken: authentication.idToken, accessToken: authentication.accessToken)
-        
-        Auth.auth().signIn(with: credential) { (result, error) in
-            if let error = error {
-                print("DEBUG: Failed to sign user in with google  \(error.localizedDescription)")
-                completion(error, REF_USERS)
-                return
-            }
-            
-            guard let uid = result?.user.uid else {return}
-          
-            
-            REF_USERS.child(uid).observeSingleEvent(of: .value) { (snapshot) in
-                if !snapshot.exists() {
-                    print("DEBUG: user does not exist")
-                    guard let email = result?.user.email else {return}
-                    guard let fullname = result?.user.displayName else {return}
-                    
-                    
-                    let values = ["email": email, "fullname": fullname, "hasSeenOnboarding": false] as [String : Any]
-                    REF_USERS.child(uid).updateChildValues(values, withCompletionBlock: completion)
-                } else {
-                    print("DEBUG: user already exists")
-                    completion(error, REF_USERS.child(uid))
-                }
-            }
-        }
-        
-    }
+  static func signInWithGoogle(didSignInFor user: GIDGoogleUser, completion: @escaping (DatabaseCompletion)) {
+           guard let authentication = user.authentication else {return}
+           let credential = GoogleAuthProvider.credential(withIDToken: authentication.idToken, accessToken: authentication.accessToken)
+           
+           Auth.auth().signIn(with: credential) { (result, error) in
+               if let error = error {
+                   print("DEBUG: Failed to sign user in with google  \(error.localizedDescription)")
+                   completion(error, REF_USERS)
+                   return
+               }
+               
+               guard let uid = result?.user.uid else {return}
+             
+               
+               REF_USERS.child(uid).observeSingleEvent(of: .value) { (snapshot) in
+                   if !snapshot.exists() {
+                       print("DEBUG: user does not exist")
+                       guard let email = result?.user.email else {return}
+                       guard let fullname = result?.user.displayName else {return}
+                       
+                       
+                       let values = ["email": email, "fullname": fullname, "hasSeenOnboarding": false] as [String : Any]
+                       REF_USERS.child(uid).updateChildValues(values, withCompletionBlock: completion)
+                   } else {
+                       print("DEBUG: user already exists")
+                       completion(error, REF_USERS.child(uid))
+                   }
+               }
+           }
+           
+       }
     
   
   

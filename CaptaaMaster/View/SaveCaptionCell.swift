@@ -14,6 +14,13 @@ class SaveCaptionCell: UICollectionViewCell {
     
     // MARK: - Properties
     
+      var caption: Caption? {
+          didSet { configure()
+
+          }
+      }
+    
+    
     private let followCaptaaLabel: ActiveLabel = {
         let label = ActiveLabel()
         label.text = " → Follow us on Instagram @Captaa__"
@@ -46,12 +53,11 @@ class SaveCaptionCell: UICollectionViewCell {
     }()
     
     
-    private let captionLabel: ActiveLabel = {
+    lazy var captionLabel: ActiveLabel = {
         let label = ActiveLabel()
         label.text = "Some test saved tweet weird #gocrazy"
         label.textColor = .black
-        label.font = UIFont.systemFont(ofSize: 15)
-        label.textAlignment = .center
+        label.font = UIFont(name: "AvenirNext-Medium", size: 14)
         label.numberOfLines = 0
         return label
     }()
@@ -60,7 +66,7 @@ class SaveCaptionCell: UICollectionViewCell {
         let button = UIButton(type: .system)
         button.setImage(#imageLiteral(resourceName: "retweet"), for: .normal)
         button.setDimensions(height: 15, width: 15)
-        button.tintColor = .lightGray
+        button.tintColor = .backgroundColor
         //    button.addTarget(self, action: #selector(handleCopyTapped), for: .touchUpInside)
         return button
     }()
@@ -71,20 +77,11 @@ class SaveCaptionCell: UICollectionViewCell {
         let button = UIButton(type: .system)
         button.setImage(UIImage(named: "trash.fill"), for: .normal)
         button.setDimensions(height: 15, width: 15)
-        button.tintColor = .lightGray
+        button.tintColor = .backgroundColor
         //     button.addTarget(self, action: #selector(handleCopyTapped), for: .touchUpInside)
         return button
     }()
-    
  
-    private lazy var shareButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setImage(#imageLiteral(resourceName: "share"), for: .normal)
-        button.tintColor = .lightGray
-        button.setDimensions(height: 15, width: 15)
-        //   button.addTarget(self, action: #selector(handleShareButton), for: .touchUpInside)
-        return button
-    }()
     
     
     
@@ -109,6 +106,21 @@ class SaveCaptionCell: UICollectionViewCell {
     
     // MARK: - Heplers
     
+    func configure() {
+        guard let caption = caption else { return}
+        
+        let viewModel = CaptionViewModel(caption: caption)
+        
+        profileImageView.sd_setImage(with: viewModel.profileImageUrl)
+        
+        // CREATE A USERNAME FOR USERS EASIER TO SEARCH
+        infoLabel.attributedText = viewModel.userInfoText
+        captionLabel.text = caption.caption
+        
+    }
+    
+    
+    
     func configureUI() {
         backgroundColor = .white
         
@@ -123,24 +135,35 @@ class SaveCaptionCell: UICollectionViewCell {
                             right: rightAnchor, paddingTop: 40,
                             paddingLeft: 8, paddingRight: 12)
         
-        infoLabel.text = "Moyo Falomo"
-        infoLabel.font = UIFont.boldSystemFont(ofSize: 11)
+     
         
         let captionStack = UIStackView(arrangedSubviews: [infoLabel, captionLabel])
         captionStack.axis = .vertical
         captionStack.distribution = .fillProportionally
         captionStack.spacing = 25
         
+      
+        
+        
         addSubview(captionStack)
         captionStack.anchor(top: profileImageView.bottomAnchor, left: profileImageView.rightAnchor, paddingTop: -25, paddingLeft: 4)
         
-        let actionStack = UIStackView(arrangedSubviews: [copyButton, trashButtton, shareButton])
+        let actionStack = UIStackView(arrangedSubviews: [copyButton, trashButtton])
         actionStack.axis = .horizontal
         actionStack.distribution = .fillEqually
+        actionStack.spacing = 20
         
         addSubview(actionStack)
-        actionStack.anchor(top: captionStack.bottomAnchor, left: leftAnchor, right: rightAnchor, paddingTop: 75)
+        actionStack.anchor(top: captionStack.bottomAnchor, left: leftAnchor, right: rightAnchor, paddingTop: 55)
         
+        actionStack.setDimensions(height: 18, width: 18)
+        
+        
+        let underlineView = UIView()
+        underlineView.backgroundColor = .systemGroupedBackground
+        addSubview(underlineView)
+        underlineView.anchor(left: leftAnchor, bottom: bottomAnchor,
+                             right: rightAnchor, height: 1)
         
         
     }

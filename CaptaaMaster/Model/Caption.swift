@@ -10,12 +10,13 @@ import Foundation
 
 struct Caption {
     let caption: String
+    let hashtag: String
     let captionID: String
-    let uid: String
-    let likes: Int
+    var likes: Int
     var timestamp: Date!
     let recaptionCount: Int
-    let user: User
+    var user: User
+    var didLike = false
     
     
     init(user: User, captionID: String, dictionary: [String: Any]) {
@@ -23,7 +24,7 @@ struct Caption {
         self.user = user
         
         self.caption = dictionary["caption"] as? String ?? ""
-        self.uid = dictionary["uid"] as? String ?? ""
+        self.hashtag = dictionary["hashtag"] as? String ?? ""
         self.likes = dictionary["likes"] as? Int ?? 0
         self.recaptionCount = dictionary["recaptions"] as? Int ?? 0
         

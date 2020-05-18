@@ -153,21 +153,25 @@ class LoginController: UIViewController, UITextFieldDelegate{
         GIDSignIn.sharedInstance()?.signIn()
     }
     
-      @objc func handleLogin() {
-          
-          guard let email = emailTextField.text else {return}
-          guard let password = passwordTextField.text else {return}
-          
-          AuthService.shared.logUserIn(withEmail: email, password: password) { (result, error) in
-              if let error = error {
-                  print("DEBUG: Error loggin in \(error.localizedDescription)")
-                  return
+    @objc func handleLogin() {
+        
+        guard let email = emailTextField.text else {return}
+        guard let password = passwordTextField.text else {return}
+        
+        showLoader(true)
+        
+        AuthService.shared.logUserIn(withEmail: email, password: password) { (result, error) in
+                self.showLoader(false)
+            if let error = error {
+                self.showMessage(withTitle: "Error", message: error.localizedDescription)
+                return
             }
             
-//            guard let window = UIApplication.shared.windows.first(where: { $0.isKeyWindow}) else {return}
-//            guard let tab = window.rootViewController as? MainTabController else {return}
+            guard let window = UIApplication.shared.windows.first(where: { $0.isKeyWindow}) else {return}
+            guard let tab = window.rootViewController as? MainTabController else {return}
             
-//            tab.authenticateUserAndConfigureUI()
+            self.showLoader(false)
+            tab.authenticateUserAndConfigureUI()
             self.dismiss(animated: true, completion: nil)
             
         }

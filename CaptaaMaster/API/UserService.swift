@@ -18,16 +18,33 @@ struct UserService {
         REF_USERS.child(uid).observeSingleEvent(of: .value) { snapshot in
             guard let dictionary = snapshot.value as? [String: AnyObject] else { return }
             
-            let user = User(uid: uid, dictionary: dictionary)
+            var user = User(uid: uid, dictionary: dictionary)
             completion(user)
             
             
-      //      self.fetchUserStats(uid: user.uid) { stats in
-        //        user.stats = stats
-         //       completion(user)
-        //    }
+            self.fetchUserStats(uid: user.uid ?? "nil") { stats in
+               user.stats = stats
+               completion(user)
+            }
         }
     }
+    
+    
+      func fetchCategoryUser(uid: String, completion: @escaping(User) -> Void) {
+          REF_CATEGORY_USERS.child(uid).observeSingleEvent(of: .value) { snapshot in
+              guard let dictionary = snapshot.value as? [String: AnyObject] else { return }
+              
+              var user = User(uid: uid, dictionary: dictionary)
+              completion(user)
+              
+              
+              self.fetchUserStats(uid: user.uid ?? "nil") { stats in
+                 user.stats = stats
+                 completion(user)
+              }
+          }
+      }
+    
     
     func fetchUsers(completion: @escaping([User]) -> Void) {
         var users = [User]()
@@ -40,42 +57,81 @@ struct UserService {
         }
     }
     
-//    func followUser(uid: String, completion: @escaping(DatabaseCompletion)) {
-   //     guard let currentUid = Auth.auth().currentUser?.uid else { return }
-    //
-   //     REF_USER_FOLLOWING.child(currentUid).updateChildValues([uid: 1]) { (err, ref) in
-   //         REF_USER_FOLLOWERS.child(uid).updateChildValues([currentUid: 1], withCompletionBlock: completion)
-  //      }
- //   }
+      
+    func fetchCategorUsers(forUser user: User,completion: @escaping([User]) -> Void) {
+       var users = [User]()
     
-//    func unfollowUser(uid: String, completion: @escaping(DatabaseCompletion)) {
-  //      guard let currentUid = Auth.auth().currentUser?.uid else { return }
         
-  //      REF_USER_FOLLOWING.child(currentUid).child(uid).removeValue { (err, ref) in
- //           REF_USER_FOLLOWERS.child(uid).child(currentUid).removeValue(completionBlock: completion)
- //       }
- //   }
+        REF_CATEGORY_USERS.child(user.uid ?? "nil").observe(.childAdded) { (snapshot) in
+            let uid = snapshot.key
+            self.fetchCategoryUser(uid: uid) { (user) in
+                users.append(user)
+                completion(users)
+            }
+        }
+      }
     
-//    func checkIfUserIsFollowed(uid: String, completion: @escaping(Bool) -> Void) {
- //       guard let currentUid = Auth.auth().currentUser?.uid else { return }
- //
-  //      REF_USER_FOLLOWING.child(currentUid).child(uid).observeSingleEvent(of: .value) { snapshot in
-  //          completion(snapshot.exists())
-  //      }
-//    }
     
-//    func fetchUserStats(uid: String, completion: @escaping(UserRelationStats) -> Void) {
-//        REF_USER_FOLLOWERS.child(uid).observeSingleEvent(of: .value) { snapshot in
-//            let followers = snapshot.children.allObjects.count
- //
- //           REF_USER_FOLLOWING.child(uid).observeSingleEvent(of: .value) { snapshot in
-  //              let following = snapshot.children.allObjects.count
- //
- //               let stats = UserRelationStats(followers: followers, following: following)
-   //             completion(stats)
-  //          }
-   //     }
-//    }
+    
+    func fetchMusicUsers() {
+        
+    }
+    
+    func fetchFeaturedUsers() {
+        
+    }
+    
+    
+
+    func followUser(uid: String, completion: @escaping(DatabaseCompletion)) {
+        guard let currentUid = Auth.auth().currentUser?.uid else { return }
+    
+        REF_USER_FOLLOWING.child(currentUid).updateChildValues([uid: 1]) { (err, ref) in
+            REF_USER_FOLLOWERS.child(uid).updateChildValues([currentUid: 1], withCompletionBlock: completion)
+        }
+    }
+
+
+
+    
+    func unfollowUser(uid: String, completion: @escaping(DatabaseCompletion)) {
+        guard let currentUid = Auth.auth().currentUser?.uid else { return }
+        
+        REF_USER_FOLLOWING.child(currentUid).child(uid).removeValue { (err, ref) in
+            REF_USER_FOLLOWERS.child(uid).child(currentUid).removeValue(completionBlock: completion)
+        }
+    }
+
+
+
+    
+    func checkIfUserIsFollowed(uid: String, completion: @escaping(Bool) -> Void) {
+        guard let currentUid = Auth.auth().currentUser?.uid else { return }
+        
+        REF_USER_FOLLOWING.child(currentUid).child(uid).observeSingleEvent(of: .value) { snapshot in
+            completion(snapshot.exists())
+        }
+    }
+
+
+
+    
+    func fetchUserStats(uid: String, completion: @escaping(UserRelationStats) -> Void) {
+        REF_USER_FOLLOWERS.child(uid).observeSingleEvent(of: .value) { snapshot in
+           let followers = snapshot.children.allObjects.count
+            
+            
+           REF_USER_FOLLOWING.child(uid).observeSingleEvent(of: .value) { snapshot in
+               let following = snapshot.children.allObjects.count
+            
+ 
+                let stats = UserRelationStats(followers: followers, following: following)
+                completion(stats)
+            }
+        }
+}
+
+
     
     func updateProfileImage(image: UIImage, completion: @escaping(URL?) -> Void) {
         guard let imageData = image.jpegData(compressionQuality: 0.3) else { return }
@@ -94,21 +150,25 @@ struct UserService {
             }
         }
     }
+
     
-//    func saveUserData(user: User, completion: @escaping(DatabaseCompletion)) {
- //       guard let uid = Auth.auth().currentUser?.uid else { return }
-  //
- //       let values = ["fullname": user.fullname,
-  //                    "username": user.username,
- //                     "bio": user.bio ?? ""]
- //
- //       REF_USERS.child(uid).updateChildValues(values, withCompletionBlock: completion)
-//    }
     
-  //  func fetchUser(withUsername username: String, completion: @escaping(User) -> Void) {
-    //    REF_USER_USERNAMES.child(username).observeSingleEvent(of: .value) { snapshot in
-   //         guard let uid = snapshot.value as? String else { return }
-    //        self.fetchUser(uid: uid, completion: completion)
-    //    }
-   // }
+
+    
+   func saveUserData(user: User, completion: @escaping(DatabaseCompletion)) {
+       guard let uid = Auth.auth().currentUser?.uid else { return }
+  
+        let values = ["fullname": user.fullname,
+                     "bio": user.bio ?? ""]
+ 
+        REF_USERS.child(uid).updateChildValues(values, withCompletionBlock: completion)
+    }
+    
+    func fetchUser(withFullname fullname: String, completion: @escaping(User) -> Void) {
+       REF_USER_USERNAMES.child(fullname).observeSingleEvent(of: .value) { snapshot in
+           guard let uid = snapshot.value as? String else { return }
+           self.fetchUser(uid: uid, completion: completion)
+       }
+   }
 }
+

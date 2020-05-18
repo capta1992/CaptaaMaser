@@ -8,9 +8,29 @@
 
 import UIKit
 
+private let reusueIdentifier = "SuggestionsCell"
+
 class SuggestionsController: UIViewController {
     
     // MARK: - Properties
+    
+    private var users = [User]() {
+        didSet { searchTableView.reloadData()}
+    }
+    
+    
+    
+    
+    lazy var searchTableView: UITableView = {
+        let tableView = UITableView()
+        tableView.backgroundColor = .white
+        tableView.isScrollEnabled = true
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        return tableView
+    }()
+
+    
+    
     
     private let iconImage = UIImageView(image: #imageLiteral(resourceName: "captaalogo"))
     private let dividerView = SeperatorView()
@@ -22,7 +42,7 @@ class SuggestionsController: UIViewController {
         let label = UILabel()
         label.text = "Suggestions for you to follow"
         label.textColor = .white
-        label.font = UIFont.boldSystemFont(ofSize: 26)
+        label.font = UIFont(name: "AvenirNext-Bold", size: 24)
         return label
     }()
     
@@ -31,7 +51,7 @@ class SuggestionsController: UIViewController {
         label.text = "When you follow someone, you'll see their Captions in your Home Timeline."
         label.numberOfLines = 0
         label.textColor = .lightGray
-        label.font = UIFont.systemFont(ofSize: 15)
+        label.font = UIFont(name: "AvenirNext-Medium", size: 14)
         return label
     }()
     
@@ -40,7 +60,7 @@ class SuggestionsController: UIViewController {
          let label = UILabel()
          label.text = "You may be interested in"
          label.textColor = .white
-         label.font = UIFont.boldSystemFont(ofSize: 18)
+         label.font = UIFont(name: "AvenirNext-Bold", size: 18)
          return label
         
     }()
@@ -62,11 +82,24 @@ class SuggestionsController: UIViewController {
         super.viewDidLoad()
         
         configureUI()
-        
+        fetchUsers()
         
         
         
     }
+    
+    
+    // MARK: - API
+    
+    func fetchUsers() {
+        UserService.shared.fetchUsers { (users) in
+            users.forEach { (user) in
+                self.users = users
+            }
+        }
+    }
+    
+    
     
     // MARK: - Selectors
     
@@ -74,6 +107,10 @@ class SuggestionsController: UIViewController {
     func configureNavigationUI() {
         navigationController?.navigationBar.barStyle = .black
         navigationController?.navigationBar.isHidden = true
+        
+ 
+          
+        
         
     }
     
@@ -85,6 +122,10 @@ class SuggestionsController: UIViewController {
     func configureUI() {
         view.backgroundColor = .backgroundColor
         configureNavigationUI()
+        
+        searchTableView.delegate = self
+        searchTableView.dataSource = self
+        searchTableView.register(SuggestionsCell.self, forCellReuseIdentifier: reusueIdentifier)
         
         view.addSubview(iconImage)
         iconImage.centerX(inView: view)
@@ -109,16 +150,21 @@ class SuggestionsController: UIViewController {
         view.addSubview(dividerView3)
         dividerView3.anchor(top: interestedLabel.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 12)
         
-        
-        
-        
-        
+    
         
         view.addSubview(dividerView)
         dividerView.anchor(top: nil, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 100, paddingRight: 0 )
         
+        view.addSubview(searchTableView)
+        searchTableView.anchor(top: dividerView.bottomAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: -450)
+        
+        searchTableView.rowHeight = 90
+        searchTableView.separatorStyle = .none
+        
+        
+        
         view.addSubview(actionButton)
-        actionButton.anchor(top: dividerView.bottomAnchor, left: nil, right: view.rightAnchor, paddingTop: 20, paddingLeft: 0, paddingBottom: 0, paddingRight: 8)
+        actionButton.anchor(top: view.topAnchor, left: nil, right: view.rightAnchor, paddingTop: 50, paddingLeft: 0, paddingBottom: 0, paddingRight: 8)
         
         
         actionButton.backgroundColor = .twitterBlue
@@ -132,8 +178,22 @@ class SuggestionsController: UIViewController {
         
         actionButton.bindToKeyboard()
         dividerView.bindToKeyboard()
+
+    }
+    
+}
+
+
+extension SuggestionsController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return users.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = searchTableView.dequeueReusableCell(withIdentifier: reusueIdentifier, for: indexPath) as! SuggestionsCell
         
-        
+        cell.user = users[indexPath.row]
+        return cell
     }
     
     

@@ -49,6 +49,7 @@ class BaseViewController: UIViewController {
         profileImageView.layer.cornerRadius = 32 / 2
         profileImageView.layer.masksToBounds = true
         profileImageView.isUserInteractionEnabled = true
+        profileImageView.backgroundColor = .groupTableViewBackground
         
         //      let tap = UITapGestureRecognizer(target: self, action: #selector(handleProfileImageTap))
         //     profileImageView.addGestureRecognizer(tap)

@@ -24,7 +24,6 @@ let STORAGE_POST_IMAGES_REF = STORAGE_REF.child("post_images")
 // MARK: - Database References
 
 let REF_USER_USERNAMES = DB_REF.child("user-usernames")
-let REF_USERS = DB_REF.child("users")
 let USER_CAPTA_REF = DB_REF.child("capta-user")
 let USER_EMOJI_REF = DB_REF.child("emoji-user")
 let USER_MUSIC_REF = DB_REF.child("music-user")
@@ -46,8 +45,19 @@ let HASHTAG_POST_REF = DB_REF.child("hashtag-post")
 let SAVE_POST_REF = DB_REF.child("saved-posts")
 
 
+let REF_USERS = DB_REF.child("users")
+let REF_CAPTIONS = DB_REF.child("captions")
+let REF_USER_CAPTIONS = DB_REF.child("user-captions")
+let REF_USER_FOLLOWERS = DB_REF.child("user-followers")
+let REF_USER_FOLLOWING = DB_REF.child("user-following")
+let REF_USER_LIKES = DB_REF.child("user-likes")
+let REF_CAPTION_LIKES = DB_REF.child("caption-likes")
+let REF_NOTIFICATIONS = DB_REF.child("notifications")
+let REF_CATEGORY_USERS = DB_REF.child("categories")
+let REF_MUSIC_USERS = DB_REF.child("music")
+let REF_FEATURED_USERS = DB_REF.child("featured")
+let REF_HASHTAG_POST = DB_REF.child("hashtag-post")
 
-let REF_SAVED_CAPTIONS = DB_REF.child("captions")
 
 
 
