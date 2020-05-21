@@ -12,6 +12,7 @@ import ActiveLabel
 
 protocol CaptionCellDelegate: class {
     func handleLikeTapped(_ cell: CaptionCell)
+    func handleHastagTapped(_ cell: CaptionCell)
     func handleProfileImageTapped(_ cell: CaptionCell)
 }
 
@@ -272,7 +273,7 @@ class CaptionCell: UICollectionViewCell {
     
     
     @objc func handleHastagTapped() {
-        
+        delegate?.handleHastagTapped(self)
     }
     
     

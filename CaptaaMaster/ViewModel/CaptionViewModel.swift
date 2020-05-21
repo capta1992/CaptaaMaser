@@ -75,8 +75,6 @@ struct CaptionViewModel {
         self.user = caption.user
     }
     
-    
-    
     fileprivate func attributedText(withValue value: Int, text: String,
                                     valueColor: UIColor, textColor: UIColor) -> NSAttributedString {
         let attributedTitle = NSMutableAttributedString(string: "\(value)",
@@ -89,7 +87,6 @@ struct CaptionViewModel {
     }
     
     // MARK: - Helpers
-    
     
     func size(forWidth width: CGFloat) -> CGSize {
         let measurmentLabel = UILabel()

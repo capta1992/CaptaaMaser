@@ -49,6 +49,11 @@ struct CaptionService {
                 let captionId = snapshot.key
                 
                 self.fetchCaption(withCaptionID: captionId) { (caption) in
+                    
+                    captions = captions.filter({
+                        $0.captionID != caption.captionID
+                    })
+                    
                     captions.append(caption)
                     completion(captions)
                     
@@ -59,6 +64,11 @@ struct CaptionService {
         REF_USER_CAPTIONS.child(currentUid).observe(.childAdded) { (snapshot) in
             let captionId = snapshot.key
             self.fetchCaption(withCaptionID: captionId) { (caption) in
+                
+                captions = captions.filter({
+                    $0.captionID != caption.captionID
+                })
+                
                 captions.append(caption)
                 completion(captions)
                 
@@ -76,6 +86,11 @@ struct CaptionService {
             
             
             self.fetchCaption(withCaptionID: captionID) { (caption) in
+                
+                captions = captions.filter({
+                    $0.captionID != caption.captionID
+                })
+                
                 captions.append(caption)
                 completion(captions)
                 

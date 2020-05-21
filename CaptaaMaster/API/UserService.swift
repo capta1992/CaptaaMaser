@@ -81,8 +81,12 @@ struct UserService {
         
     }
     
+    func fetchUserFllowingUsers(uid: String, completion: @escaping(DatabaseCompletion)) {
+        REF_USER_FOLLOWING.child(uid).observeSingleEvent(of: .value) { snapshot in
+            let follwings = snapshot.children.allObjects.count
+        }
+    }
     
-
     func followUser(uid: String, completion: @escaping(DatabaseCompletion)) {
         guard let currentUid = Auth.auth().currentUser?.uid else { return }
     
@@ -91,9 +95,6 @@ struct UserService {
         }
     }
 
-
-
-    
     func unfollowUser(uid: String, completion: @escaping(DatabaseCompletion)) {
         guard let currentUid = Auth.auth().currentUser?.uid else { return }
         
@@ -129,7 +130,7 @@ struct UserService {
                 completion(stats)
             }
         }
-}
+    }
 
 
     

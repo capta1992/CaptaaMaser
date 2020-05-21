@@ -28,8 +28,6 @@ class ExploreController: BaseViewController {
     private var categoryUsers = [User]()
     private var featuredUsers = [User]()
     
-    
-    
     private var currentDataSource: [User] {
         switch selectedFilter {
         case.music: return musicUsers
@@ -64,7 +62,6 @@ class ExploreController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         
         configureUI()
         fetchMusicUsers()
@@ -158,10 +155,6 @@ class ExploreController: BaseViewController {
         profileImageView.layer.cornerRadius = 32 / 2
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: profileImageView)
-        
-      
-             
-        
         
     }
     

@@ -61,11 +61,10 @@ class ProfileController: UICollectionViewController {
         fetchLikedCaptions()
         fetchPersonalCaptions()
         fetchUserStats()
+        fetchFollowingUsers()
         
    //     fetchSavedCaptions()
     
-            
-
     }
     
     
@@ -99,6 +98,13 @@ class ProfileController: UICollectionViewController {
         }
     }
     
+    func fetchFollowingUsers() {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        UserService.shared.fetchUserFllowingUsers(uid: uid, completion: {_,_ in
+            
+        })
+    }
+    
     func fetchCaptions() {
         guard let user = user else { return}
         CaptionService.shared.fetchCaptions(forUser: user) { (caption) in
@@ -129,9 +135,6 @@ class ProfileController: UICollectionViewController {
         nav.modalPresentationStyle = .fullScreen
         present(nav, animated: true, completion: nil)
     }
-    
-    
-    
     
     func configureCollectionViewUI(){
         collectionView.backgroundColor = .white

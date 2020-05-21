@@ -51,14 +51,13 @@ class ExploreCell: UITableViewCell {
         return label
     }()
     
-    
     lazy var followButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Follow", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont(name: "AvenirNext-Medium", size: 12)
         button.backgroundColor =  .instagramColor
-        //    button.addTarget(self, action: #selector(handleFollowTapped), for: .touchUpInside)
+//        button.addTarget(self, action: #selector(handleFollowTapped), for: .touchUpInside)
         return button
     }()
     

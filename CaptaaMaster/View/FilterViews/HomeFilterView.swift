@@ -37,8 +37,6 @@ class HomeFilterView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        
-        
         collectionView.register(HomeFilterCell.self, forCellWithReuseIdentifier: reuseIdenttifier)
         addSubview(collectionView)
         collectionView.addConstraintsToFillView(self)

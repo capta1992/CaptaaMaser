@@ -124,10 +124,11 @@ class FeedController: UICollectionViewController {
     // MARK: - Selectors
     
     func handleHashtagFeedTapped(forCell cell: CaptionCell) {
-        cell.hashtagLabel.handleHashtagTap { (hashtag) in
-            let controller = HashtagController(collectionViewLayout: UICollectionViewFlowLayout())
-            self.navigationController?.pushViewController(controller, animated: true)
-        }
+//        cell.hashtagLabel.handleHashtagTap { (hashtag) in
+//
+//        }
+        let controller = HashtagController(collectionViewLayout: UICollectionViewFlowLayout())
+        self.navigationController?.pushViewController(controller, animated: true)
     }
     
     
@@ -158,7 +159,7 @@ class FeedController: UICollectionViewController {
         navigationItem.titleView = imageView
         
         view.addSubview(filterBar)
-        filterBar.anchor(top: view.bottomAnchor,left: view.leftAnchor, bottom: view.bottomAnchor,right:  view.rightAnchor,paddingBottom: 680, height: 50)
+        filterBar.anchor(top: view.bottomAnchor,left: view.leftAnchor, bottom: view.bottomAnchor,right:  view.rightAnchor,paddingBottom: UIScreen.main.bounds.height - 143, height: 60)
         
         view.addSubview(underineView)
         underineView.anchor(top: filterBar.bottomAnchor,left: view.leftAnchor , width: view.frame.width / 3, height: 2)
@@ -224,9 +225,15 @@ extension FeedController {
         cell.delegate = self
         cell.caption = captions[indexPath.row]
         
-        handleHashtagFeedTapped(forCell: cell)
-        
         return cell
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+//        if let cell = collectionView.cellForItem(at: indexPath) {
+//            let cell = cell as! CaptionCell
+//            handleHashtagFeedTapped(forCell: cell)
+//            return
+//        }
     }
 }
 
@@ -247,6 +254,10 @@ extension FeedController: UICollectionViewDelegateFlowLayout {
 }
 
 extension FeedController: CaptionCellDelegate {
+    
+    func handleHastagTapped(_ cell: CaptionCell) {
+        handleHashtagFeedTapped(forCell: cell)
+    }
     
     func handleLikeTapped(_ cell: CaptionCell) {
         guard let caption = cell.caption else { return}

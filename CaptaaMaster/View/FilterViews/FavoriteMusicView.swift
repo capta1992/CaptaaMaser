@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import FirebaseDatabase
 
 private let favoriteMusicIdentifier = "FavoriteMusicCell"
 
@@ -43,11 +44,25 @@ class FavoriteMusicView: UIView {
         addSubview(collectionView)
         collectionView.addConstraintsToFillView(self)
         
+        fetchMusicUsers()
         
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func fetchMusicUsers() {
+        Database.database().reference().child("music").observe(.childAdded) { (snapshot) in
+            // uid
+            let uid = snapshot.key
+            
+            Database.fetchUser(with: uid, completion: { (user) in
+                self.users.append(user)
+                self.collectionView.reloadData()
+            })
+            
+        }
     }
 }
 
@@ -55,13 +70,14 @@ class FavoriteMusicView: UIView {
 
 extension FavoriteMusicView: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 6
+        return self.users.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: favoriteMusicIdentifier, for: indexPath) as! FavoriteMusicCell
       
         //      cell.delegate = self
+        cell.user = self.users[indexPath.row]
         return cell
 }
     
