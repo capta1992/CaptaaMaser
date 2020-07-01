@@ -21,7 +21,7 @@ class FavoriteMusicCell: UICollectionViewCell {
     
     
     
-        lazy var profileImageView: UIImageView = {
+    lazy var profileImageView: UIImageView = {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFit
         iv.clipsToBounds = true
@@ -29,9 +29,9 @@ class FavoriteMusicCell: UICollectionViewCell {
         iv.layer.cornerRadius = 65 / 2
         iv.backgroundColor = .groupTableViewBackground
         
-        let tap = UITapGestureRecognizer(target: self, action: #selector(handleProfileImageTapped))
-        iv.addGestureRecognizer(tap)
-        iv.isUserInteractionEnabled = true
+//        let tap = UITapGestureRecognizer(target: self, action: #selector(handleProfileImageTapped))
+//        iv.addGestureRecognizer(tap)
+//        iv.isUserInteractionEnabled = true
         
         return iv
     }()
@@ -72,10 +72,10 @@ class FavoriteMusicCell: UICollectionViewCell {
     
     // MARK: - Selectors
     
-    @objc func handleProfileImageTapped() {
-        
-    }
-    
+//    @objc func handleProfileImageTapped() {
+//        
+//    }
+//    
     
     
     // MARK: - Helpers

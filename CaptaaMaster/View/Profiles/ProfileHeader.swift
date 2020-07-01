@@ -11,6 +11,7 @@ import UIKit
 protocol ProfileHeaderDelegate: class {
     func handleEditProfileFollow(_ header: ProfileHeader)
     func didSelect(filter: ProfileFilterOptions)
+    func clickUser(user:User)
 }
 
 
@@ -236,6 +237,7 @@ class ProfileHeader: UICollectionReusableView {
         musicHighlightsLabel.anchor(top: favoriteHighlightLabel.bottomAnchor, left: leftAnchor, paddingTop: 4, paddingLeft: 8 )
         
         addSubview(favoriteMusicBar)
+        favoriteMusicBar.delegate = self
         favoriteMusicBar.anchor(top: musicHighlightsLabel.bottomAnchor,left: leftAnchor, right: rightAnchor, height: 120)
         
      
@@ -252,6 +254,14 @@ extension ProfileHeader: ProfileFilterViewDelegate {
         guard let filter = ProfileFilterOptions(rawValue: index) else { return}
         
         delegate?.didSelect(filter: filter)
+    }
+    
+    
+}
+
+extension ProfileHeader: FavoriteMusicViewDelegate {
+    func clickFavoriteUser(user: User) {
+        delegate?.clickUser(user: user)
     }
     
     

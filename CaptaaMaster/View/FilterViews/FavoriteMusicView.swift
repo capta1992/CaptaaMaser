@@ -12,13 +12,16 @@ import FirebaseDatabase
 private let favoriteMusicIdentifier = "FavoriteMusicCell"
 
 
-
+protocol FavoriteMusicViewDelegate {
+    func clickFavoriteUser(user: User)
+}
 
 class FavoriteMusicView: UIView {
     
     // MARK: - Properties
     
     var users = [User]()
+    var delegate: FavoriteMusicViewDelegate!
     
     lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -79,8 +82,14 @@ extension FavoriteMusicView: UICollectionViewDataSource {
         //      cell.delegate = self
         cell.user = self.users[indexPath.row]
         return cell
-}
+    }
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let user = self.users[indexPath.row]
+        delegate.clickFavoriteUser(user: user)
+//        let controller = MusicProfileController(user: user)
+//        navigationController?.pushViewController(controller, animated: true)
+    }
     
 
 }

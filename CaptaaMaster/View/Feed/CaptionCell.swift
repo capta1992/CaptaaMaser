@@ -14,6 +14,7 @@ protocol CaptionCellDelegate: class {
     func handleLikeTapped(_ cell: CaptionCell)
     func handleHastagTapped(_ cell: CaptionCell)
     func handleProfileImageTapped(_ cell: CaptionCell)
+    func showActionSheet(caption: Caption)
 }
 
 protocol FeedShareDelegate {
@@ -278,6 +279,7 @@ class CaptionCell: UICollectionViewCell {
     
     
     @objc func showActionSheet() {
+        delegate?.showActionSheet(caption: self.caption!)
     }
     
     @objc func handleLikeTapped() {

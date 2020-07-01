@@ -131,6 +131,12 @@ class FeedController: UICollectionViewController {
         self.navigationController?.pushViewController(controller, animated: true)
     }
     
+    fileprivate func showActionSheet(forUser user: User) {
+        actionSheetLauncher = ActionSheetLauncher(user: user)
+        actionSheetLauncher.delegate = self
+        actionSheetLauncher.show()
+    }
+    
     
     @objc func handleProfileImageTap() {
         delegate?.handleMenuToggle()
@@ -254,6 +260,18 @@ extension FeedController: UICollectionViewDelegateFlowLayout {
 }
 
 extension FeedController: CaptionCellDelegate {
+    func showActionSheet(caption: Caption) {
+        if caption.user.isCurrentUser {
+            showActionSheet(forUser: caption.user)
+        } else {
+            UserService.shared.checkIfUserIsFollowed(uid: caption.user.uid ?? "nil") { (isFollowed) in
+                var user = self.caption.user
+                user.isFollowed = isFollowed
+                self.showActionSheet(forUser: user)
+            }
+            
+        }
+    }
     
     func handleHastagTapped(_ cell: CaptionCell) {
         handleHashtagFeedTapped(forCell: cell)
@@ -469,6 +487,25 @@ extension FeedController: CoachMarksControllerDelegate, CoachMarksControllerData
         self.coachMarksController.dataSource = self
         self.coachMarksController.overlay.backgroundColor = UIColor.darkGray.withAlphaComponent(0.9)
     }
+    
+}
+
+extension FeedController: ActionSheetLauncherDelegate {
+    func didSelect(option: ActionSheetOptions) {
+        switch option {
+        case .follow(let user):
+            UserService.shared.followUser(uid: user.uid ?? "nil") { (err, ref) in
+            }
+        case .unfollow(let user):
+            UserService.shared.unfollowUser(uid: user.uid ?? "nil") { (err, ref) in
+            }
+        case .report:
+            print("DEBUG: report tweet")
+        case .delete:
+            print("DEBUG: delette tweet")
+        }
+    }
+    
     
 }
 

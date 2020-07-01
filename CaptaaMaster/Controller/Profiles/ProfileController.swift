@@ -204,6 +204,11 @@ extension ProfileController {
 }
 
 extension ProfileController: ProfileHeaderDelegate {
+    func clickUser(user: User) {
+        let controller = MusicProfileController(user: user)
+        navigationController?.pushViewController(controller, animated: true)
+    }
+    
     
     
     func didSelect(filter: ProfileFilterOptions) {
